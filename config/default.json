@@ -9,5 +9,6 @@
     "name": "qrvey",
     "secret": "tpsreport"
   },
-  "environment": "production"
+  "environment": "production",
+  "port": 3000
 }
