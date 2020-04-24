@@ -1,0 +1,22 @@
+{
+  "name": "qrvey",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jcastell7/qrveyTest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jcastell7/qrveyTest/issues"
+  },
+  "homepage": "https://github.com/jcastell7/qrveyTest#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
