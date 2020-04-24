@@ -1,12 +1,10 @@
 {
   "name": "qrvey",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "author": "",
-  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/jcastell7/qrveyTest.git"
@@ -15,8 +13,12 @@
     "url": "https://github.com/jcastell7/qrveyTest/issues"
   },
   "homepage": "https://github.com/jcastell7/qrveyTest#readme",
-  "description": "",
   "dependencies": {
-    "express": "^4.17.1"
+    "config": "^3.3.1",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "mongoose": "^5.9.10",
+    "pm2": "^4.4.0"
   }
 }
