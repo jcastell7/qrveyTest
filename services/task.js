@@ -8,7 +8,7 @@ const Model = require("../models");
 let taskService = {
   /**
    *creates a new task
-   * @param {JSON} a json with the values
+   * @param {JSON} a json with the values name, seconds, status, continuation
    * @returns
    */
   create: taskData => {

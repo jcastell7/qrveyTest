@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 /* POST new task*/
 router.post('/', urlencodedParser, (req, res, next) => {
-  Services.Task.create({}).then(() => {
+  Services.Task.create({name: req.body.name, seconds: req.body.seconds, status: req.body.status, continuation: req.body.continuation}).then(() => {
     res.sendStatus(200);
   }).catch(err => {
     console.error(err);
