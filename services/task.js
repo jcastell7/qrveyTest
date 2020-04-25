@@ -8,12 +8,12 @@ const Model = require("../models");
 let taskService = {
   /**
    *creates a new task
-   * @param {JSON} a json with the values name, seconds, status, continuation
+   * @param {JSON} a json with the values name, seconds, status, continuation adn the project
    * @returns
    */
   create: taskData => {
     let task = new Model.Task(taskData);
-    task.save();
+    return task.save();
   }
 };
 

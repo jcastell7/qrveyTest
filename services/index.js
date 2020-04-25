@@ -1,4 +1,4 @@
-/** @module models */
+/** @module services */
 module.exports = {
   Services: {
     /**
@@ -12,6 +12,12 @@ module.exports = {
      * @module task/service
      * @see module:task/service
      */
-    Task: require("./task")
+    Task: require("./task"),
+    /**
+     * Project service module.
+     * @module project/service
+     * @see module:project/service
+     */
+    Project: require("./project")
   }
 };

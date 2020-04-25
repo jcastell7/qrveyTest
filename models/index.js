@@ -8,10 +8,16 @@ module.exports = {
      */
     ...require("./user"),
     /**
-     * Task service module.
-     * @module task/service
-     * @see module:task/service
+     * Task model module.
+     * @module task/model
+     * @see module:task/model
      */
-    ...require("./task")
+    ...require("./task"),
+    /**
+     * Project model module.
+     * @module project/model
+     * @see module:project/model
+     */
+    ...require("./project")
   }
 };

@@ -15,6 +15,7 @@ const taskSchema = new Schema({
   seconds: Number,
   status: { type: String, default: "in-course" },
   continuation: { type: Boolean, default: false },
+  project: String
 });
 
 let task = mongoose.model("Task", taskSchema);
