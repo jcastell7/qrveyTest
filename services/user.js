@@ -17,6 +17,12 @@ let userService = {
     let user = new Model.User(userData);
     return user.save();
   },
+  /**
+   *searches the username on the database and authenticates the password
+   * @param {string} userName
+   * @param {string} password
+   * @returns
+   */
   authenticate: (userName, password) => {
     return new Promise((resolve, reject) => {
       Model.User.findOne({ userName: userName }).exec((err, user) => {
