@@ -1,17 +1,17 @@
 /** @module models */
 module.exports = {
-  Model: {
+  Services: {
     /**
      * User service module.
      * @module user/service
      * @see module:user/service
      */
-    ...require("./user"),
+    User: require("./user"),
     /**
      * Task service module.
      * @module task/service
      * @see module:task/service
      */
-    ...require("./task")
+    Task: require("./task")
   }
 };

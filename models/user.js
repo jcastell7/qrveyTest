@@ -1,23 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-var ObjectID = require("bson-objectid");
 const phpass = require("phpass");
 const passwordhash = new phpass.PasswordHash();
-
-/**
- * Represents a user.
- * @constructor
- * @param {string} userName
- * @param {string} password
- */
-const userSchema = new Schema({
-  _id: ObjectId,
-  userName: String,
-  password: String,
-  set: obfuscate,
-  set: createId
-});
-
 
 /**
  *Receives the password sent by the ui to the model 
@@ -31,7 +15,6 @@ const obfuscate = password => {
     : (password = createPasswordHash("1234"));
 };
 
-
 /**
  *Turns the plain text password into a hash to be stored on the db
  *using the phpass npm module.
@@ -43,13 +26,19 @@ const createPasswordHash = password => {
 };
 
 /**
- *Creates a new immutable ObjectID instance based
- *on the current system time.
- * @returns {string} mongodb id
+ * Represents a user.
+ * @constructor
+ * @param {string} userName
+ * @param {string} password
  */
-const createId = () => {
-  return ObjectID().toString();
-};
+const userSchema = new Schema({
+  userName: String,
+  password: String
+});
+
+userSchema.path('password').set(password => {
+  return obfuscate(password);
+})
 
 let user = mongoose.model("User", userSchema);
 
