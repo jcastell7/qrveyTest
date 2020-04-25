@@ -7,7 +7,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 /*POST for user login*/
 router.post("/login", urlencodedParser, (req, res, next) => {
-  Services.User.authenticate(req.userName, req.password)
+  Services.User.authenticate(req.body.userName, req.body.password)
     .then(user => {
       req.session.userId = user._id;
       res.sendStatus(200);
