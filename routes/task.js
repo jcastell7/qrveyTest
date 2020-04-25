@@ -8,15 +8,16 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 /* GET user listing. */
 router.get('/', function(req, res, next) {
-  Services.Task.create().then(response => {
-    res.send('the task was created');
-  });
+
 });
 
 /* POST new task*/
 router.post('/', urlencodedParser, (req, res, next) => {
   Services.Task.create({}).then(() => {
     res.sendStatus(200);
+  }).catch(err => {
+    console.error(err);
+    res.sendStatus(400)
   });
 });
 
