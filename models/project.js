@@ -8,6 +8,7 @@ const Schema = mongoose.Schema;
  */
 const projectSchema = new Schema({
   name: String,
+  tasks: [{type: Schema.Types.ObjectId, ref: 'Task'}]
 });
 
 let project = mongoose.model("Project", projectSchema);

@@ -30,9 +30,6 @@ router.get('/logout', (req, res, next) => {
   }
 });
 
-/* GET user listing. */
-router.get("/", function(req, res, next) {});
-
 /* POST new user*/
 router.post("/", urlencodedParser, (req, res, next) => {
   Services.User.create({
@@ -48,4 +45,5 @@ router.post("/", urlencodedParser, (req, res, next) => {
     });
 });
 
+/** @module user/router */
 module.exports = router;

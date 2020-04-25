@@ -11,7 +11,8 @@ const mongoose = require("mongoose");
 const config = require("config");
 mongoose.connect(config.get('database.connect'), {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false 
 }).then(()=>{
 
 /**

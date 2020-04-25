@@ -22,7 +22,8 @@ const createPasswordHash = password => {
  */
 const userSchema = new Schema({
   userName: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  tasks: [{type: Schema.Types.ObjectId, ref: 'Task'}]
 });
 
 userSchema.path("password").set(password => {

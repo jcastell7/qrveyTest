@@ -15,7 +15,7 @@ const taskSchema = new Schema({
   seconds: Number,
   status: { type: String, default: "in-course" },
   continuation: { type: Boolean, default: false },
-  project: String
+  creationDate : {type: Date, immutable: true, default: Date.now}
 });
 
 let task = mongoose.model("Task", taskSchema);

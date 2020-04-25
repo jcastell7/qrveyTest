@@ -28,15 +28,36 @@ let userService = {
       Model.User.findOne({ userName: userName }).exec((err, user) => {
         if (err) {
           return reject();
-        }else if(!user){
+        } else if (!user) {
           return reject();
         }
         let auth = passwordhash.checkPassword(password, user.password);
-        if(auth===true){
+        if (auth === true) {
           resolve(user);
-        }else{
+        } else {
           return reject();
         }
+      });
+    });
+  },
+  /**
+   *receives a userid and a task and attaches the task to the user
+   * @param {string} userId
+   * @param {model} task
+   * @returns
+   */
+  addTask: (userId, task) => {
+    return new Promise((resolve, reject) => {
+      Model.User.findOne({ _id: userId }).exec((err, user) => {
+        if (err) {
+          return reject();
+        } else if (!user) {
+          return reject();
+        }
+        user.tasks.unshift(task._id);
+        user.save().then(() => {
+          resolve();
+        });
       });
     });
   }
