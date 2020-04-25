@@ -1,5 +1,11 @@
+/** @module models */
 module.exports = {
-    Model: {
-        ...require("./user")
-    }
-}
+  Model: {
+    /**
+     * User model module.
+     * @module user/model
+     * @see module:user/model
+     */
+    ...require("./user")
+  }
+};

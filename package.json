@@ -23,6 +23,7 @@
     "http-errors": "~1.6.3",
     "mocha": "^7.1.1",
     "mongoose": "^5.9.10",
+    "phpass": "^0.1.1",
     "pm2": "^4.4.0"
   },
   "devDependencies": {
