@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 var ObjectID = require("bson-objectid");
 const phpass = require("phpass");

@@ -9,10 +9,11 @@ let userService = {
   /**
    *creates a new user
    * @param {JSON} a json with the values username and password
-   * @returns a new user on db
+   * @returns
    */
   create: userData => {
-    return new Model.User(userData);
+    let user = new Model.User(userData);
+    user.save();
   }
 };
 

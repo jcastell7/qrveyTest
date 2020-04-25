@@ -6,6 +6,12 @@ module.exports = {
      * @module user/model
      * @see module:user/model
      */
-    ...require("./user")
+    ...require("./user"),
+    /**
+     * Task service module.
+     * @module task/service
+     * @see module:task/service
+     */
+    ...require("./task")
   }
 };

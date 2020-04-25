@@ -7,6 +7,12 @@
 var app = require('../app');
 var debug = require('debug')('qrvey:server');
 var http = require('http');
+const mongoose = require("mongoose");
+const config = require("config");
+await mongoose.connect(config.get('database.connect'), {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 /**
  * Get port from environment and store in Express.
