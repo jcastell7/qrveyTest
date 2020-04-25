@@ -21,14 +21,16 @@ router.post("/", urlencodedParser, (req, res, next) => {
   if (!req.session.userId) {
     res.sendStatus(401);
   } else {
-    Services.Task.create({
-      name: req.body.name,
-      seconds: req.body.seconds,
-      status: req.body.status,
-      continuation: req.body.continuation
-    })
-      .then(task => {
-        Services.User.addTask(req.session.userId, task);
+    Services.Task.newTask(
+      {
+        name: req.body.name,
+        seconds: req.body.seconds,
+        status: req.body.status,
+        continuation: req.body.continuation
+      },
+      req.session.userId
+    )
+      .then(() => {
         res.sendStatus(200);
       })
       .catch(err => {
@@ -56,6 +58,20 @@ router.post("/edit", urlencodedParser, (req, res, next) => {
         console.error(err);
         res.sendStatus(400);
       });
+  }
+});
+
+/* POST continue task*/
+router.post("/continue", urlencodedParser, (req, res, next) => {
+  if (!req.session.userId) {
+    res.sendStatus(401);
+  } else {
+    Services.Task.continue(req.body._id, req.session.userId).then(task => {
+      res.sendStatus(200);
+    }).catch(err => {
+      console.error(err);
+      res.sendStatus(400)
+    });
   }
 });
 
