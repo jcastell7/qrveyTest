@@ -15,17 +15,20 @@
   },
   "homepage": "https://github.com/jcastell7/qrveyTest#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "config": "^3.3.1",
     "debug": "~2.6.9",
     "express": "^4.16.4",
+    "express-session": "^1.17.1",
     "http-errors": "^1.6.3",
-    "jade": "^1.11.0",
     "mocha": "^7.1.1",
     "mongoose": "^5.9.10",
     "morgan": "^1.10.0",
+    "passport": "^0.4.1",
     "phpass": "^0.1.1",
-    "pm2": "^4.4.0"
+    "pm2": "^4.4.0",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "chai-http": "^4.3.0",
