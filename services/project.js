@@ -8,7 +8,7 @@ const { Model } = require("../models");
 let projectService = {
   /**
    *creates a new project
-   * @param {JSON} a json with the values name
+   * @param {JSON} a json with the name value
    * @returns
    */
   create: projectData => {
