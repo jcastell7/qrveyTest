@@ -48,7 +48,7 @@ let userService = {
    */
   addTask: (userId, task) => {
     return new Promise((resolve, reject) => {
-      Model.User.findOne({ _id: userId }).exec((err, user) => {
+      Model.User.findById(userId).exec((err, user) => {
         if (err) {
           return reject();
         } else if (!user) {

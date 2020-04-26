@@ -5,7 +5,6 @@
  */
 const { Model } = require("../models");
 const User = require("./user");
-const mongoose = require("mongoose");
 
 let taskService = {
   /**
