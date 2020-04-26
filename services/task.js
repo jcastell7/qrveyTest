@@ -47,7 +47,7 @@ let taskService = {
    */
   listAll: userId => {
     return new Promise((resolve, reject) => {
-      Model.User.findById(userId, "tasks")
+      Model.User.findById(userId, "tasks").lean()
         .populate("tasks")
         .exec((err, tasks) => {
           if (err) {

@@ -37,7 +37,20 @@ router.post("/link", urlencodedParser, (req, res, next) => {
   }
 });
 
-
+router.get('/:projectId(([a-f0-9]{24}))/time', (req, res, next) => {
+  if (!req.session.userId) {
+    res.sendStatus(401);
+  } else {
+    Services.Project.projectTime(req.params.projectId)
+      .then(time => {
+        res.send(`${time}`);
+      })
+      .catch(err => {
+        console.error(err);
+        res.sendStatus(400);
+      });
+  }
+});
 
 /** @module project/router */
 module.exports = router;
