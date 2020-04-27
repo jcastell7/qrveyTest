@@ -81,6 +81,11 @@ let projectService = {
         });
     });
   },
+  /**
+   *list the users and the total time for every one
+   * @param {string} projectId
+   * @returns {promise} a json with all the users time on a project
+   */
   ProjectUserTime: projectId => {
     return new Promise((resolve, reject) => {
       let projectTime;
@@ -97,19 +102,6 @@ let projectService = {
             return reject();
           }
           User.listAll().then(users => {
-            /*users.forEach(user => {
-              let userId = user._id;
-              let userTasks = tasks.tasks.filter(task => {
-                task.user._id === userId;
-              });
-              if (userTasks.length > 0) {
-                let userTime = 0;
-                userTasks.forEach(task => {
-                  userTime += task.seconds;
-                });
-                projectTime.push({ userId: userId, seconds: userTime });
-              }
-            });*/
             projectTime = users.map(user => {
               let userId = user._id;
               let userTasks = tasks.tasks.filter(task => {
