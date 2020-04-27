@@ -1,0 +1,15 @@
+{
+  "database": {
+    "connect": "mongodb://localhost/qrvey"
+  },
+  "session": {
+    "cookie secure": false,
+    "domain": "localhost",
+    "enabled": true,
+    "name": "qrvey",
+    "secret": "tpsreport"
+  },
+  "environment": "production",
+  "port": 3000,
+  "secret": "th1s1s4T3st4pp"
+}
