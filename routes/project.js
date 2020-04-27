@@ -60,7 +60,7 @@ router.get('/:projectId(([a-f0-9]{24}))/userTime', (req, res, next) => {
   } else {
     Services.Project.ProjectUserTime(req.params.projectId)
       .then(time => {
-        res.send(`${time}`);
+        res.send(JSON.stringify(time));
       })
       .catch(err => {
         console.error(err);

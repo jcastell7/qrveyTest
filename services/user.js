@@ -18,6 +18,20 @@ let userService = {
     return user.save();
   },
   /**
+   *brings a list of all the users in the database
+   * @returns {promise} a list of all the users
+   */
+  listAll: ()=> {
+    return new Promise((resolve,reject) => {
+      Model.User.find({}).lean().exec((err, users) => {
+        if (err) {
+          return reject();
+        }
+        resolve(users);
+      })
+    });
+  },
+  /**
    *searches the username on the database and authenticates the password
    * @param {string} userName
    * @param {string} password

@@ -4,6 +4,7 @@
  * @see module:models
  */
 const { Model } = require("../models");
+const User = require("./user");
 
 let projectService = {
   /**
@@ -46,7 +47,7 @@ let projectService = {
    */
   listAllTasks: (projectId, lean) => {
     return new Promise((resolve, reject) => {
-      Model.Project.findById(projectId, "tasks", {lean: lean})
+      Model.Project.findById(projectId, "tasks", { lean: lean })
         .populate("tasks")
         .exec((err, tasks) => {
           if (err) {
@@ -64,28 +65,67 @@ let projectService = {
    */
   projectTime: projectId => {
     return new Promise((resolve, reject) => {
-      projectService.listAllTasks(projectId, true).then(project => {
-        let tasks = project.tasks;
-        let time = 0;
-        tasks.forEach(task => {
-          time+=task.seconds;
+      projectService
+        .listAllTasks(projectId, true)
+        .then(project => {
+          let tasks = project.tasks;
+          let time = 0;
+          tasks.forEach(task => {
+            time += task.seconds;
+          });
+          resolve(time);
+        })
+        .catch(err => {
+          console.error(err);
+          return reject();
         });
-        resolve(time);
-      }).catch(err => {
-        console.error(err);
-        return reject();
-      });
     });
   },
-  ProjectUserTime: (projectId) => {
+  ProjectUserTime: projectId => {
     return new Promise((resolve, reject) => {
-      projectService.listAllTasks(projectId, false).then(tasks => {
-        console.log("this are the tasks: ", tasks);
-        tasks.populate("user")
-        .exec((err, user) => {
-          console.log("this is the user: ", user);
+      let projectTime;
+      Model.Project.findById(projectId, "tasks")
+        .lean()
+        .populate({
+          path: "tasks",
+          populate: {
+            path: "user"
+          }
+        })
+        .exec((err, tasks) => {
+          if (err) {
+            return reject();
+          }
+          User.listAll().then(users => {
+            /*users.forEach(user => {
+              let userId = user._id;
+              let userTasks = tasks.tasks.filter(task => {
+                task.user._id === userId;
+              });
+              if (userTasks.length > 0) {
+                let userTime = 0;
+                userTasks.forEach(task => {
+                  userTime += task.seconds;
+                });
+                projectTime.push({ userId: userId, seconds: userTime });
+              }
+            });*/
+            projectTime = users.map(user => {
+              let userId = user._id;
+              let userTasks = tasks.tasks.filter(task => {
+                return task.user._id.equals(userId);
+              });
+              if (userTasks.length > 0) {
+                let userTime = 0;
+                userTasks.forEach(task => {
+                  userTime += task.seconds;
+                });
+                return { userId: userId, seconds: userTime };
+              }
+            });
+            resolve(projectTime);
+          });
         });
-      });
     });
   }
 };
