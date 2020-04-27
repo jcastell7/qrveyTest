@@ -1,8 +1,6 @@
 const chai = require("chai");
 const should = chai.should();
 const expect = chai.expect;
-const chaiHttp = require("chai-http");
-chai.use(chaiHttp);
 const { Services } = require("../services");
 const { Model } = require("../models");
 const mongoose = require("mongoose");
