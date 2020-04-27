@@ -41,11 +41,12 @@ let projectService = {
    *receives a project id and returns a list of the tasks
    +linked to the project
    * @param {string} projectId
+   * @param {boolean} lean - flag to return a lean array or the mongoose wrap
    * @returns {promise} project with a list of task linked
    */
-  listAllTasks: projectId => {
+  listAllTasks: (projectId, lean) => {
     return new Promise((resolve, reject) => {
-      Model.Project.findById(projectId, "tasks").lean()
+      Model.Project.findById(projectId, "tasks", {lean: lean})
         .populate("tasks")
         .exec((err, tasks) => {
           if (err) {
@@ -63,7 +64,7 @@ let projectService = {
    */
   projectTime: projectId => {
     return new Promise((resolve, reject) => {
-      projectService.listAllTasks(projectId).then(project => {
+      projectService.listAllTasks(projectId, true).then(project => {
         let tasks = project.tasks;
         let time = 0;
         tasks.forEach(task => {
@@ -73,6 +74,17 @@ let projectService = {
       }).catch(err => {
         console.error(err);
         return reject();
+      });
+    });
+  },
+  ProjectUserTime: (projectId) => {
+    return new Promise((resolve, reject) => {
+      projectService.listAllTasks(projectId, false).then(tasks => {
+        console.log("this are the tasks: ", tasks);
+        tasks.populate("user")
+        .exec((err, user) => {
+          console.log("this is the user: ", user);
+        });
       });
     });
   }

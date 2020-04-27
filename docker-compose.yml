@@ -1,0 +1,16 @@
+version: '3'
+services:
+  api:
+    image: qrvey-test
+    build: .
+    ports:
+      - "3000:3000"
+    volumes: 
+      - /usr/src/app/node_modules
+    depends_on: 
+      - mongodb
+    
+  mongodb:
+    image: mongo:4.2.6-bionic
+    ports: 
+      - "27017:27017"

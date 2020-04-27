@@ -28,6 +28,7 @@ let taskService = {
         name: taskData.name,
         seconds: taskData.seconds,
         status: taskData.status,
+        user: userId,
         continuation: taskData.continuation
       })
         .then(task => {

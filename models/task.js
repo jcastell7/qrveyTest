@@ -15,6 +15,7 @@ const taskSchema = new Schema({
   seconds: Number,
   status: { type: String, default: "in-course" },
   continuation: { type: Boolean, default: false },
+  user: {type: Schema.Types.ObjectId, ref: 'User'},
   creationDate : {type: Date, immutable: true, default: Date.now}
 });
 
