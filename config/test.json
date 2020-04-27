@@ -1,0 +1,3 @@
+{"database": {
+    "connect": "mongodb://localhost/qrvey-testing"
+  }}

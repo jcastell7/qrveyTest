@@ -41,15 +41,15 @@ let userService = {
     return new Promise((resolve, reject) => {
       Model.User.findOne({ userName: userName }).exec((err, user) => {
         if (err) {
-          return reject();
+          return reject("there is an error searching the user");
         } else if (!user) {
-          return reject();
+          return reject("user not found");
         }
         let auth = passwordhash.checkPassword(password, user.password);
         if (auth === true) {
           resolve(user);
         } else {
-          return reject();
+          return reject("password is wrong");
         }
       });
     });
