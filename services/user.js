@@ -64,9 +64,9 @@ let userService = {
     return new Promise((resolve, reject) => {
       Model.User.findById(userId).exec((err, user) => {
         if (err) {
-          return reject();
+          return reject("there was an error finding the user");
         } else if (!user) {
-          return reject();
+          return reject("the user does not exist");
         }
         user.tasks.unshift(task._id);
         user.save().then(() => {
