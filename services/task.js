@@ -24,20 +24,32 @@ let taskService = {
    */
   newTask: (taskData, userId) => {
     return new Promise((resolve, reject) => {
-      taskService.create({
-        name: taskData.name,
-        seconds: taskData.seconds,
-        status: taskData.status,
-        user: userId,
-        continuation: taskData.continuation
-      })
+      let taskId;
+      taskService
+        .create({
+          name: taskData.name,
+          seconds: taskData.seconds,
+          status: taskData.status,
+          user: userId,
+          continuation: taskData.continuation
+        })
         .then(task => {
-          User.addTask(userId, task);
-          resolve();
+          taskId = task._id;
+          User.addTask(userId, task)
+            .then(() => {
+              resolve(task);
+            })
+            .catch(err => {
+              console.error(err);
+              Model.Task.remove({ _id: taskId }).then(() => {
+                return reject(err);
+              });
+            });
         })
         .catch(err => {
           console.error(err);
-          return reject();
+          Model.Task.remove({ _id: taskId });
+          return reject("a parameter is not valid");
         });
     });
   },
@@ -48,11 +60,15 @@ let taskService = {
    */
   listAll: userId => {
     return new Promise((resolve, reject) => {
-      Model.User.findById(userId, "tasks").lean()
+      Model.User.findById(userId, "tasks")
+        .lean()
         .populate("tasks")
         .exec((err, tasks) => {
           if (err) {
-            return reject();
+            return reject("there was an error finding the user");
+          }
+          if (tasks === null) {
+            return reject("the user was not found");
           }
           resolve(tasks);
         });
@@ -68,47 +84,48 @@ let taskService = {
       Object.keys(taskData).forEach(
         key => taskData[key] === undefined && delete taskData[key]
       );
-      Model.Task.findByIdAndUpdate(taskData._id, taskData).exec((err, task) => {
-        if (err) {
-          return reject();
-        } else if (!task) {
-          return reject();
+      Model.Task.findByIdAndUpdate(taskData._id, taskData, { new: true }).exec(
+        (err, task) => {
+          if (err) {
+            return reject("there is an error in the query");
+          } else if (!task) {
+            return reject("the task was not found");
+          }
+          resolve(task);
         }
-        resolve(task);
-      });
+      );
     });
   },
   /**
    *
    *creates a new task with the same name of an existing task
    * @param {*} taskId
-   * @param {string} userId
    * @returns
    */
-  continue: (taskId, userId) => {
+  continue: taskId => {
     return new Promise((resolve, reject) => {
-      Model.Task.findById(taskId, "name seconds").exec((err, task) => {
-        if (err) {
-          return reject();
-        } else if (!task) {
-          return reject();
-        }
-        let taskData = {
-          name: task.name,
-          seconds: task.seconds,
-          status: "in-course",
-          continuation: true
-        };
-        taskService
-          .newTask(taskData, userId)
-          .then(task => {
-            resolve(task);
-          })
-          .catch(err => {
-            console.error(err);
+      Model.Task.findById(taskId, "name seconds user")
+        .lean()
+        .populate("user")
+        .exec((err, task) => {
+          if (err) {
             return reject();
-          });
-      });
+          } else if (!task) {
+            return reject("the task was not found");
+          }
+          let taskData = {
+            name: task.name,
+            seconds: task.seconds,
+            status: "in-course",
+            continuation: true
+          };
+          let userId = task.user._id.toString();
+          taskService
+            .newTask(taskData, userId)
+            .then(task => {
+              resolve(task);
+            });
+        });
     });
   }
 };

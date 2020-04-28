@@ -24,9 +24,6 @@ let userService = {
   listAll: ()=> {
     return new Promise((resolve,reject) => {
       Model.User.find({}).lean().exec((err, users) => {
-        if (err) {
-          return reject();
-        }
         resolve(users);
       })
     });
@@ -41,15 +38,15 @@ let userService = {
     return new Promise((resolve, reject) => {
       Model.User.findOne({ userName: userName }).exec((err, user) => {
         if (err) {
-          return reject();
+          return reject("there is an error searching the user");
         } else if (!user) {
-          return reject();
+          return reject("user not found");
         }
         let auth = passwordhash.checkPassword(password, user.password);
         if (auth === true) {
           resolve(user);
         } else {
-          return reject();
+          return reject("password is wrong");
         }
       });
     });
@@ -64,9 +61,9 @@ let userService = {
     return new Promise((resolve, reject) => {
       Model.User.findById(userId).exec((err, user) => {
         if (err) {
-          return reject();
+          return reject("there was an error finding the user");
         } else if (!user) {
-          return reject();
+          return reject("the user does not exist");
         }
         user.tasks.unshift(task._id);
         user.save().then(() => {
