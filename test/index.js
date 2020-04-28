@@ -90,6 +90,17 @@ describe("User services", function() {
           done();
         });
     });
+    it("should throw an error when trying to add a task to a user with a bad parameter", function(done) {
+      Services.User.addTask(
+        { userId: "5ea63d926e4108272de819d6" },
+        "5ea63d926e4108272de819d6"
+      )
+        .then()
+        .catch(function(err) {
+          expect(err).to.equal("there was an error finding the user");
+          done();
+        });
+    });
   });
 
   describe("list all users", function() {
@@ -182,6 +193,15 @@ describe("Task services", function() {
           done();
         });
     });
+    it("should throw an error when trying to list the user tasks with a bad parameter", function(done) {
+      let userId = { userId: "5ea63d926e4108272de819d6" };
+      Services.Task.listAll(userId)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("there was an error finding the user");
+          done();
+        });
+    });
   });
   describe("modify a task stored on db", function() {
     it("should change the values of the task stored in the database", function(done) {
@@ -203,7 +223,7 @@ describe("Task services", function() {
           });
         });
     });
-    it("should throw an error when trying to change the values of the task with a bad parameter", function(done) {
+    it("should throw an error when trying to change the values of an unexisting task", function(done) {
       let task = {
         _id: "5ea63d926e4108272de819d6",
         name: "taskNewName",
@@ -214,6 +234,20 @@ describe("Task services", function() {
         .then(function() {})
         .catch(function(err) {
           expect(err).to.equal("the task was not found");
+          done();
+        });
+    });
+    it("should throw an error when trying to change the values of the task with a bad parameter", function(done) {
+      let task = {
+        _id: { id: "5ea63d926e4108272de819d6" },
+        name: "taskNewName",
+        seconds: 50,
+        status: "paused"
+      };
+      Services.Task.updateTasks(task)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("there is an error in the query");
           done();
         });
     });
@@ -237,6 +271,144 @@ describe("Task services", function() {
               done();
             });
           });
+        });
+    });
+    it("should throw an error when creating a new task from a wrong id", function(done) {
+      let taskId = "5ea63d926e4108272de819d6";
+      Services.Task.continue(taskId)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("the task was not found");
+          done();
+        });
+    });
+  });
+});
+
+describe("Project services", function() {
+  describe("Project creation", function() {
+    it("should create a project", function(done) {
+      Services.Project.create({ name: "project" }).then(function(project) {
+        project.name.should.equal("project");
+        done();
+      });
+    });
+    it("should list all the available projects", function(done) {
+      Services.Project.listAll().then(function(projects) {
+        expect(projects).to.have.lengthOf(1);
+        done();
+      });
+    });
+  });
+  describe("Project linking with tasks", function() {
+    it("should add a task to a project", function(done) {
+      Model.User.findOne({ userName: "name" })
+        .lean()
+        .exec(function(err, user) {
+          let userId = user._id;
+          Services.Task.listAll(userId).then(function(tasks) {
+            let task = tasks.tasks[0];
+            Services.Project.listAll().then(function(projects) {
+              let projectId = projects[0]._id.toString();
+              Services.Project.addTask(task._id.toString(), projectId).then(
+                function(project) {
+                  expect(project.tasks).to.have.lengthOf(1);
+                  done();
+                }
+              );
+            });
+          });
+        });
+    });
+    it("should throw an error when trying to add a task to a non existing project", function(done) {
+      Model.User.findOne({ userName: "name" })
+        .lean()
+        .exec(function(err, user) {
+          let userId = user._id;
+          Services.Task.listAll(userId).then(function(tasks) {
+            let task = tasks.tasks[0];
+            let projectId = "5ea63d926e4108272de819d6";
+            Services.Project.addTask(task._id.toString(), projectId)
+              .then()
+              .catch(function(err) {
+                expect(err).to.equal("the project could not be found");
+                done();
+              });
+          });
+        });
+    });
+    it("should throw an error when trying to add a task with a wrong parameter", function(done) {
+      Model.User.findOne({ userName: "name" })
+        .lean()
+        .exec(function(err, user) {
+          let userId = user._id;
+          Services.Task.listAll(userId).then(function(tasks) {
+            let task = tasks.tasks[0];
+            let projectId = { projectId: "5ea63d926e4108272de819d6" };
+            Services.Project.addTask(task._id.toString(), projectId)
+              .then()
+              .catch(function(err) {
+                expect(err).to.equal("there was an error on the query");
+                done();
+              });
+          });
+        });
+    });
+    it("should show all the tasks linked to a project", function(done) {
+      Services.Project.listAll().then(function(projects) {
+        let projectId = projects[0]._id.toString();
+        Services.Project.listAllTasks(projectId, true).then(function(tasks) {
+          expect(tasks.tasks).to.have.lengthOf(1);
+          done();
+        });
+      });
+    });
+    it("should throw an error when trying to pass a bad parameter", function(done) {
+      let projectId = { projectId: "5ea63d926e4108272de819d6" };
+      Services.Project.listAllTasks(projectId, true)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("there was an error on the query");
+          done();
+        });
+    });
+  });
+  describe("project timing", function() {
+    it("should give the total time of a project", function(done) {
+      Services.Project.listAll().then(function(projects) {
+        let projectId = projects[0]._id.toString();
+        Services.Project.projectTime(projectId).then(function(project) {
+          expect(project).to.equal(50);
+          done();
+        });
+      });
+    });
+    it("should throw an error when trying to list the time of a project with a bad parameter", function(done) {
+      let projectId = { projectId: "5ea63d926e4108272de819d6" };
+      Services.Project.projectTime(projectId)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("there was an error on the query");
+          done();
+        });
+    });
+    it("should list the time of all the users that have a task on the project", function(done) {
+      Services.Project.listAll().then(function(projects) {
+        let projectId = projects[0]._id.toString();
+        Services.Project.projectUserTime(projectId).then(function(project) {
+          project[0].should.have.property("seconds");
+          project[0].should.have.property("userId");
+          done();
+        });
+      });
+    });
+    it("should throw an error when trying to list the users time with a bad parameter", function(done) {
+      let projectId = { projectId: "5ea63d926e4108272de819d6" };
+      Services.Project.projectUserTime(projectId)
+        .then(function() {})
+        .catch(function(err) {
+          expect(err).to.equal("there was an error on the query");
+          done();
         });
     });
   });

@@ -41,7 +41,9 @@ let taskService = {
             })
             .catch(err => {
               console.error(err);
-              return reject(err);
+              Model.Task.remove({ _id: taskId }).then(() => {
+                return reject(err);
+              });
             });
         })
         .catch(err => {
@@ -79,16 +81,10 @@ let taskService = {
    */
   updateTasks: taskData => {
     return new Promise((resolve, reject) => {
-      let newTask = {
-        name: taskData.name,
-        seconds: taskData.seconds,
-        status: taskData.status,
-        continuation: taskData.continuation
-      };
-      Object.keys(newTask).forEach(
-        key => newTask[key] === undefined && delete newTask[key]
+      Object.keys(taskData).forEach(
+        key => taskData[key] === undefined && delete taskData[key]
       );
-      Model.Task.findByIdAndUpdate(taskData._id, newTask, { new: true }).exec(
+      Model.Task.findByIdAndUpdate(taskData._id, taskData, { new: true }).exec(
         (err, task) => {
           if (err) {
             return reject("there is an error in the query");
@@ -115,7 +111,7 @@ let taskService = {
           if (err) {
             return reject();
           } else if (!task) {
-            return reject();
+            return reject("the task was not found");
           }
           let taskData = {
             name: task.name,
@@ -128,10 +124,6 @@ let taskService = {
             .newTask(taskData, userId)
             .then(task => {
               resolve(task);
-            })
-            .catch(err => {
-              console.error(err);
-              return reject();
             });
         });
     });

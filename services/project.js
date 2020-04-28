@@ -17,6 +17,20 @@ let projectService = {
     return project.save();
   },
   /**
+   * returns a list of all the projects
+   * @returns {promise} a list of all projects
+   */
+  listAll: () => {
+    return new Promise((resolve,reject) => {
+      Model.Project.find({}).lean().exec((err, projects) => {
+        if (err) {
+          return reject();
+        }
+        resolve(projects);
+      })
+    });
+  },
+  /**
    *
    *adds a task to the project
    * @param {string} taskId
@@ -27,13 +41,13 @@ let projectService = {
     return new Promise((resolve, reject) => {
       Model.Project.findById(projectId).exec((err, project) => {
         if (err) {
-          return reject();
+          return reject("there was an error on the query");
         } else if (!project) {
-          return reject();
+          return reject("the project could not be found");
         }
         project.tasks.push(taskId);
-        project.save().then(() => {
-          resolve();
+        project.save().then((project) => {
+          resolve(project);
         });
       });
     });
@@ -51,7 +65,7 @@ let projectService = {
         .populate("tasks")
         .exec((err, tasks) => {
           if (err) {
-            return reject();
+            return reject("there was an error on the query");
           }
           resolve(tasks);
         });
@@ -77,7 +91,7 @@ let projectService = {
         })
         .catch(err => {
           console.error(err);
-          return reject();
+          return reject(err);
         });
     });
   },
@@ -86,7 +100,7 @@ let projectService = {
    * @param {string} projectId
    * @returns {promise} a json with all the users time on a project
    */
-  ProjectUserTime: projectId => {
+  projectUserTime: projectId => {
     return new Promise((resolve, reject) => {
       let projectTime;
       Model.Project.findById(projectId, "tasks")
@@ -99,7 +113,7 @@ let projectService = {
         })
         .exec((err, tasks) => {
           if (err) {
-            return reject();
+            return reject("there was an error on the query");
           }
           User.listAll().then(users => {
             projectTime = users.map(user => {

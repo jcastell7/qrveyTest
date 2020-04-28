@@ -24,9 +24,6 @@ let userService = {
   listAll: ()=> {
     return new Promise((resolve,reject) => {
       Model.User.find({}).lean().exec((err, users) => {
-        if (err) {
-          return reject();
-        }
         resolve(users);
       })
     });
